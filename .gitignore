@@ -1,0 +1,55 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+*.pid
+*.pid.lock
+*.log
+
+# Build outputs
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+.secrets
+.secrets.*
+!.env.example
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# IDE / editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Logs and databases
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Act local config (optional, personal)
+.actrc
+
+.secrects

@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "review": {
+    "enabled": true,
+    "languages": ["typescript", "javascript"],
+    "ignorePatterns": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**"
+    ],
+    "maxFileSize": 100000,
+    "chunkSize": 500,
+    "maxComments": 10
+  },
+  "rules": {
+    "security": {
+      "sqlInjection": true,
+      "hardcodedSecrets": true,
+      "unsafeEval": true
+    },
+    "style": {
+      "consoleLog": "warning",
+      "todoComments": "warning",
+      "debugger": "error"
+    },
+    "performance": {
+      "largeBundles": true,
+      "inefficientLoops": true
+    }
+  },
+  "ai": {
+    "model": "gpt-4",
+    "temperature": 0.3,
+    "maxTokens": 2000,
+    "focusAreas": ["bugs", "security", "architecture", "performance"],
+    "responseFormat": { "type": "json_object" },
+    "message": {
+      "role": "system",
+      "content": "You are an expert code reviewer. Always return valid JSON."
+    }
+  },
+  "output": {
+    "inlineComments": true,
+    "summaryComment": true,
+    "reviewBadge": true
+  }
+}
