@@ -3,13 +3,29 @@ describe('gptAnalyzer', () => {
   let analyzeWithGPT;
 
   beforeEach(() => {
-    // Reset module cache so we can re-require with a fresh mock
     jest.resetModules();
 
-    // Create a fresh mock function for each test
-    mockCreate = jest.fn();
+    // Mock the config module (correct relative path)
+    jest.doMock('../../src/utils/config', () => ({
+      ai: {
+        promptTemplate: 'Review this {language} code:\n{code}',
+        model: 'gpt-3.5-turbo',
+        temperature: 0.3,
+        maxTokens: 2000,
+        responseFormat: { type: 'json_object' },
+        message: { role: 'system', content: 'You are an expert code reviewer.' },
+      },
+    }));
 
-    // Mock the 'openai' module before requiring the module under test
+    // Mock logger (optional)
+    jest.doMock('../../src/utils/logger', () => ({
+      debug: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    }));
+
+    mockCreate = jest.fn();
     jest.doMock('openai', () => {
       return jest.fn().mockImplementation(() => ({
         chat: {
@@ -20,17 +36,17 @@ describe('gptAnalyzer', () => {
       }));
     });
 
-    // Now require the module – it will use the mock defined above
     analyzeWithGPT = require('../../src/analyzers/gptAnalyzer').analyzeWithGPT;
   });
 
   afterEach(() => {
     jest.unmock('openai');
+    jest.unmock('../../src/utils/config');
+    jest.unmock('../../src/utils/logger');
   });
 
   test('returns issues from GPT response', async () => {
     const mockIssues = [{ type: 'bug', severity: 'high', line: 5, message: 'Test' }];
-
     mockCreate.mockResolvedValue({
       choices: [{ message: { content: JSON.stringify({ issues: mockIssues }) } }],
     });
