@@ -1,41 +1,38 @@
-name: AI code review
+name: AI Code Review
 
 on:
-    pull_request:
-        types: [opened, synchronize, reopened]
-        paths-ignore:
-            - '**.md'
-            - '**.json'
-            - '**.txt'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - "**.md"
+      - "**.json"
+      - "**.txt"
 
 jobs:
-    ai-review:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            pull-requests: write
-            issues: write
+  ai-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
-              with:
-                fetch-dept: 0
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: Setup Nodejs
-              uses: actions/checkout@v3
-              with:
-                node-version: '18'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
 
-            - name: install all depenedencies
-              run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-            - name: AI Code review
-              uses: ./
-              env: 
-                GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}} 
-                GITHUB_API_KEY: ${{secrets.OPEN_API_KEY}}
-              with:
-                config-path: 'review.config.json'
-                max-comments: '10'
-                severity: 'all' 
+      - name: CodeGuardian AI
+        uses: nasirul-ahmed/codeguardian-ai@v1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          config-path: "review.config.json"
