@@ -1,0 +1,11 @@
+[
+  {
+    "filename": "src/test.ts",
+    "status": "modified",
+    "additions": 10,
+    "deletions": 2,
+    "changes": 12,
+    "patch": "@@ -1,5 +1,5 @@\n function hello() {\n-  console.log('Hello');\n+  console.log('Hello World');\n }",
+    "sha": "file123"
+  }
+]

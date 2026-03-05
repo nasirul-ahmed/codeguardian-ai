@@ -1,0 +1,32 @@
+name: 'CodeGuardian AI'
+description: 'AI-powered code review bot for GitHub PRs'
+author: 'Nasirul Ahmed'
+
+inputs:
+  github-token:
+    description: 'GitHub token'
+    required: true
+    default: ${{ github.token }}
+  openai-api-key:
+    description: 'OpenAI API key'
+    required: true
+  config-path:
+    description: 'Path to .review.config.json'
+    required: false
+    default: 'review.config.json'
+  max-comments:
+    description: 'Maximum number of comments to post'
+    required: false
+    default: '10'
+  severity-level:
+    description: 'Minimum severity to report (all, critical, high, medium, low)'
+    required: false
+    default: 'all'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+
+branding:
+  icon: 'check-circle'
+  color: 'blue'
