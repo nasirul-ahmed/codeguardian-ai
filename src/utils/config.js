@@ -35,6 +35,7 @@ const DEFAULT_CONFIG = {
     },
   },
   ai: {
+    provider: 'puter', // 'openai' or 'puter'
     model: 'gpt-4',
     temperature: 0.3,
     maxTokens: 2000,
@@ -44,36 +45,92 @@ const DEFAULT_CONFIG = {
       role: 'system',
       content: 'You are an expert code reviewer. Always return valid JSON.',
     },
-    promptTemplate: `
-    You are an expert {language} code reviewer. Review this code and find:
+    prompt: {
+      openai: `
+        You are an expert {language} code reviewer. Review this code and find:
 
-    1. **CRITICAL BUGS** (Null pointers, race conditions, logic errors)
-    2. **SECURITY ISSUES** (SQL injection, XSS, hardcoded secrets)
-    3. **PERFORMANCE PROBLEMS** (N+1 queries, memory leaks)
-    4. **ARCHITECTURE ISSUES** (Tight coupling, single responsibility)
-    5. **CODE SMELLS** (Duplication, long methods, complex conditions)
+        1. **CRITICAL BUGS** (Null pointers, race conditions, logic errors)
+        2. **SECURITY ISSUES** (SQL injection, XSS, hardcoded secrets)
+        3. **PERFORMANCE PROBLEMS** (N+1 queries, memory leaks)
+        4. **ARCHITECTURE ISSUES** (Tight coupling, single responsibility)
+        5. **CODE SMELLS** (Duplication, long methods, complex conditions)
 
-    Return JSON format:
-    {
-      "issues": [
+        Return JSON format:
         {
-          "type": "bug|security|performance|architecture|style",
-          "severity": "critical|high|medium|low",
-          "line": number,
-          "message": "clear description",
-          "suggestion": "how to fix it",
-          "code": "relevant code snippet"
+          "issues": [
+            {
+              "type": "bug|security|performance|architecture|style",
+              "severity": "critical|high|medium|low",
+              "line": number,
+              "message": "clear description",
+              "suggestion": "how to fix it",
+              "code": "relevant code snippet"
+            }
+          ],
+          "summary": {
+            "totalIssues": number,
+            "criticalCount": number,
+            "highCount": number
+          }
         }
-      ],
-      "summary": {
-        "totalIssues": number,
-        "criticalCount": number,
-        "highCount": number
-      }
-    }
 
-    CODE TO REVIEW: \`\`\`{language} 
-    {code} \`\`\``,
+        CODE TO REVIEW: \`\`\`{language} 
+        {code} \`\`\``,
+      puter: `
+        You are a strict {language} code review AI.
+
+        Analyze the code and identify:
+
+        1. Critical bugs
+        2. Security issues
+        3. Performance problems
+        4. Architecture issues
+        5. Code smells
+
+        IMPORTANT OUTPUT RULES:
+
+        - Return ONLY valid JSON.
+        - Do NOT include markdown.
+        - Do NOT include explanations.
+        - Do NOT wrap the JSON in code blocks.
+        - The response MUST start with '{' and end with '}'.
+
+        JSON schema:
+
+        {
+          "issues": [
+            {
+              "type": "bug|security|performance|architecture|style",
+              "severity": "critical|high|medium|low",
+              "line": number,
+              "message": "clear description",
+              "suggestion": "how to fix it",
+              "code": "relevant code snippet"
+            }
+          ],
+          "summary": {
+            "totalIssues": number,
+            "criticalCount": number,
+            "highCount": number
+          }
+        }
+
+        If no issues are found return:
+
+        {
+          "issues": [],
+          "summary": {
+            "totalIssues": 0,
+            "criticalCount": 0,
+            "highCount": 0
+          }
+        }
+
+        Code:
+
+        {code}
+      `,
+    },
   },
   output: {
     inlineComments: true,

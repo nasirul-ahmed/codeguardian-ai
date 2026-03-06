@@ -1,5 +1,3 @@
-// process.env.GITHUB_TOKEN = 'fake-token'
-// process.env.OPENAI_API_KEY = 'fake-key'
 process.env.GITHUB_REPOSITORY = 'owner/repo'
 process.env.GITHUB_EVENT_PATH = './tests/fixtures/pull_request_event.json'
 

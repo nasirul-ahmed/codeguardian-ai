@@ -8,7 +8,9 @@ const { formatJSON } = require('./formatters/jsonFormatter');
 const { postReviewComments, postSummaryComment } = require('./utils/githubClient');
 const config = require('./utils/config');
 const logger = require('./utils/logger');
-const core = require("@actions/core")
+const core = require('@actions/core');
+const dotenv = require('dotenv');
+dotenv.config();
 
 async function run() {
   try {
@@ -19,7 +21,7 @@ async function run() {
 
     const relevantFiles = filterFiles(changedFiles, config);
     logger.info(`${relevantFiles.length} files relevant for review`);
-    
+
     const allIssues = [];
 
     for (const file of relevantFiles) {

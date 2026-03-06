@@ -1,4 +1,7 @@
 const { getOctokit, context } = require('../utils/githubClient');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 async function getChangedFiles() {
   if (process.env.ACT_LOCAL_TEST === 'true') {
@@ -39,8 +42,6 @@ async function getChangedFiles() {
 
   const octokit = getOctokit();
   const { owner, repo } = context.repo;
-
-  console.log(context.payload);
 
   if (!context.payload.pull_request) {
     console.error('No pull_request found in event payload. Event name:', context.eventName);
